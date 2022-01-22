@@ -10,13 +10,6 @@ import javax.swing.JPanel;
 
 public class GameBoard extends JPanel {
 
-	enum status
-	{
-		STATUS_X ,
-		STATUS_O,
-		STSTUS_UNOCUPIED
-	}
-
 	private static final long serialVersionUID = 1L;
 	public static JButton A1,A2,A3,B1,B2,B3,C1,C2,C3;
 	public static boolean PlayerTurn=true;
