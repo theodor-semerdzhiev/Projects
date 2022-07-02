@@ -1,6 +1,7 @@
 package chess_game;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import chess_game.Player.PlayerColor;
+import chess_game.Chess_Pieces;
+import chess_game.Chess_Pieces.Type_of_Piece;
 
 public class Board extends JPanel implements ActionListener, MouseListener  {
 
@@ -21,6 +24,8 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 	private int[] CurrentFocusedTile;
 	private boolean GameStarted;
 	private Player Black_Player, White_Player;
+	private String[] BoardLetters;
+	private int[] BoardNum;
 
 	//In this constructor, we will implement the mouse listener and set up the pieces
 	public Board() {
@@ -33,6 +38,8 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 		Board = new Chess_Pieces[8][8];
 		Black_Player=new Player(PlayerColor.BLACK, this);
 		White_Player=new Player(PlayerColor.WHITE, this);
+		BoardLetters = new String[]{"a","b", "c", "d", "e", "f", "g","h"};
+		BoardNum = new int[] {1,2,3,4,5,6,7,8};
 		
 		CurrentFocusedTile = new int[] {-1,-1};
 		
@@ -55,7 +62,7 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 					if(tiles[i][j].getFocusState()) {
 						g.setColor(new Color(255,255,125));
 					} else if(tiles[i][j].getHighLightState()) {
-
+						g.setColor(new Color(255,255,0));
 					} else {
 						g.setColor(new Color(255,255,204));
 					}
@@ -63,7 +70,7 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 					if(tiles[i][j].getFocusState()) {
 						g.setColor(new Color(25,51,0));
 					} else if(tiles[i][j].getHighLightState()) {
-						
+						g.setColor(new Color(0,51,0));
 					} else {
 						g.setColor(new Color(25,100,0));
 					}
@@ -73,6 +80,16 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 					g.drawImage(Board[i][j].getSprite(Board[i][j].getColor()), (int) tiles[i][j].getWidth()*Board[i][j].getPosition()[1], (int) tiles[i][j].getHeight()*Board[i][j].getPosition()[0], null);
 				} 
 			}
+		}
+		for(int i=0; i<8;i++) {
+			g.setFont(new Font("Aerial", 18, 18));
+			g.setColor(new Color(218, 103, 83));
+			g.drawString(BoardLetters[i], (int)tiles[i][7].getX()+(int)tiles[i][7].getWidth()-11, (int)tiles[i][7].getY()+(int)tiles[i][7].getHeight()-2);
+		}
+		for(int i=0; i<8;i++) {
+			g.setFont(new Font("Aerial", 18, 18));
+			g.setColor(new Color(218, 103, 83));
+			g.drawString(String.valueOf(BoardNum[i]), (int)tiles[0][i].getX(), (int)tiles[0][i].getY()+16);
 		}
 	} 
 
@@ -86,28 +103,39 @@ public class Board extends JPanel implements ActionListener, MouseListener  {
 	public void mouseClicked(MouseEvent e) {
 	}
 	public void mouseEntered(MouseEvent e) {
-
 	}
 	public void mouseExited(MouseEvent e) {
 	}
 	public void mousePressed(MouseEvent e) {
-		System.out.println(getSquare(e.getY(),e.getX())[1]+ " "+getSquare(e.getY(),e.getX())[0]);
+		System.out.println(getSquare(e.getY(),e.getX())[0]+ " "+getSquare(e.getY(),e.getX())[1]);
 		tiles[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].setFocusState(true);
 		try {
-			if(Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]] == null) {
-				if(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]]!= null && getPlayer(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].getColor()).getTurn() && Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].isLegalMoves(this, getSquare(e.getY(),e.getX())[0], getSquare(e.getY(),e.getX())[1])) {
-					if(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].getColor()==PlayerColor.BLACK) {
-						Black_Player.setTurn(false);
-						White_Player.setTurn(true);
-					} else if(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].getColor()==PlayerColor.WHITE) {
-						Black_Player.setTurn(true);
-						White_Player.setTurn(false);
-					}
+			if(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]]!= null && getPlayer(Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].getColor()).getTurn() && Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].isLegalMoves(this, getSquare(e.getY(),e.getX())[0], getSquare(e.getY(),e.getX())[1])) {
+				if(Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]] == null) {
 					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]]=Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]];
 					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].setPosition(getSquare(e.getY(),e.getX())[1], getSquare(e.getY(),e.getX())[0]);
-					Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]]=null;
+					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].setMovedStatus(true);
+				} else if(!Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].isPermanent() && Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].getColor()!=Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]].getColor()){
+					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]]=Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]];
+					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].setPosition(getSquare(e.getY(),e.getX())[1], getSquare(e.getY(),e.getX())[0]);
+					Board[getSquare(e.getY(),e.getX())[0]][getSquare(e.getY(),e.getX())[1]].setMovedStatus(true);
 				}
-			}
+			
+				Board[CurrentFocusedTile[0]][CurrentFocusedTile[1]]=null;
+				//checks if a check as been made
+				//subject to change
+				if(!White_Player.getTurn()) {
+					if(White_Player.isChecked(this)) {
+					}
+					Black_Player.setTurn(false);
+					White_Player.setTurn(true);
+				} else {
+					if(Black_Player.isChecked(this)) {
+					}
+					Black_Player.setTurn(true);
+					White_Player.setTurn(false);
+				}
+			} 
 			tiles[CurrentFocusedTile[0]][CurrentFocusedTile[1]].setFocusState(false);
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			return;

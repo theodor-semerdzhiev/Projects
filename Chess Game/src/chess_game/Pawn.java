@@ -9,6 +9,7 @@ public class Pawn extends Chess_Pieces{
 	private PlayerColor color;
 	private int[] CurrentPosition;
 	private Type_of_Piece type;
+	private boolean isMoved;
 	
 	public Pawn(PlayerColor color,  Board board, int row, int column) {
 		super(color, board, row, column);
@@ -17,13 +18,9 @@ public class Pawn extends Chess_Pieces{
 		board.getBoard()[getInitialPosition()[1]][getInitialPosition()[0]]=this;
 		setColor(color);
 		setType(Type_of_Piece.PAWN);
+		isMoved=false;
 	}
 
-	@Override
-	void CaptureMovement() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	boolean isPermanent() {
@@ -32,32 +29,32 @@ public class Pawn extends Chess_Pieces{
 
 	@Override
 	boolean isLegalMoves(Board board, int column, int row) {
-		switch(getColor()) {
-		case BLACK:
-			if(getPosition()[0]==InitialPosition[0]) {
-				if(row - getPosition()[0] ==2  && getPosition()[1]==column && board.getBoard()[column][row-1]==null) {
-					return true;
-				} else if(row - getPosition()[0] ==1  && getPosition()[1]==column) {
-					return true;
-				}
-			} else if(row - getPosition()[0] ==1 && getPosition()[1]==column) {
+		if(board.getBoard()[column][row]!=null && getPosition()[1]==column) {
+			return false;
+		} else if(getColor()==PlayerColor.WHITE && row - getPosition()[0] >0) {
+			return false;
+		} else if(getColor()==PlayerColor.BLACK && getPosition()[0]-row >0) {
+			return false;
+		} else if (Math.abs(column-getPosition()[1])==1 && Math.abs(row - getPosition()[0]) ==1) {
+			if(board.getBoard()[column][row]!=null && board.getBoard()[column][row].getColor()!=color) {
 				return true;
-			} 
-			return false;
-		case WHITE:
-			if(getPosition()[0]==InitialPosition[0]) {
-				if(getPosition()[0] - row ==2  && getPosition()[1]==column && board.getBoard()[column][row+1]==null) {
+			} else {
+				return false;
+			}
+		} else if(getPosition()[0]==InitialPosition[0]) {
+			if(Math.abs(row - getPosition()[0])==2  && getPosition()[1]==column) {
+				if(getColor()==PlayerColor.BLACK && board.getBoard()[column][row-1]==null) {
 					return true;
-				} else if(getPosition()[0] - row ==1  && getPosition()[1]==column) {
+				} else if(getColor()==PlayerColor.WHITE && board.getBoard()[column][row+1]==null) {
 					return true;
 				}
-			} else if(getPosition()[0] - row ==1 && getPosition()[1]==column) {
-				return true;			
+			} else if(Math.abs(row - getPosition()[0])==1  && getPosition()[1]==column) {
+				return true;
 			}
-			return false;
-		default:
-			return null != null;
-		}
+		} else if(Math.abs(row - getPosition()[0])==1 && getPosition()[1]==column) {
+			return true;
+		} 
+		return false;
 	}
 
 	@Override
@@ -108,10 +105,14 @@ public class Pawn extends Chess_Pieces{
 	void setType(Type_of_Piece type) {
 		this.type = type;
 	}
+	
+	@Override
+	boolean isMoved() {
+		return isMoved;
+	}
 
 	@Override
-	boolean isChecking(Board board, int row, int column) {
-		
-		return false;
+	void setMovedStatus(boolean isMoved) {
+		this.isMoved=isMoved;
 	}
 }

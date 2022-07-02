@@ -1,6 +1,5 @@
 package chess_game;
 
-import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
@@ -12,7 +11,7 @@ public class Main {
 		frame.setLayout(null);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(0, 0, 1000, 860);
+		frame.setBounds(0, 0, 1400, 860);
 		frame.setResizable(false);
 		
 		board = new Board();

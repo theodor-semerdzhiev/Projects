@@ -12,6 +12,7 @@ public class Knight extends Chess_Pieces {
 	private PlayerColor color;
 	private int[] CurrentPosition;
 	private Type_of_Piece type;
+	private boolean isMoved;
 	
 	public Knight(PlayerColor color, Board board, int row, int column) {
 		super(color, board, row ,column);
@@ -20,6 +21,7 @@ public class Knight extends Chess_Pieces {
 		board.getBoard()[getInitialPosition()[1]][getInitialPosition()[0]]=this;
 		setColor(color);
 		setType(Type_of_Piece.KNIGHT);
+		isMoved=false;
 	}
 
 	@Override
@@ -28,11 +30,6 @@ public class Knight extends Chess_Pieces {
 		return false;
 	}
 
-	@Override
-	void CaptureMovement() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	Image getSprite(PlayerColor color) {
@@ -67,7 +64,9 @@ public class Knight extends Chess_Pieces {
 
 	@Override
 	boolean isLegalMoves(Board board, int row, int column) {
-		if(Math.abs(getPosition()[0]-column)==2 && Math.abs(getPosition()[1]-row)==1) {
+		if(board.getBoard()[row][column]!=null && board.getBoard()[row][column].getColor()==color) {
+			return false;
+		} else if(Math.abs(getPosition()[0]-column)==2 && Math.abs(getPosition()[1]-row)==1) {
 			return true;
 		} else if(Math.abs(getPosition()[0]-column)==1 && Math.abs(getPosition()[1]-row)==2) {
 			return true;
@@ -84,7 +83,6 @@ public class Knight extends Chess_Pieces {
 	@Override
 	void setPosition(int row, int column) {
 		CurrentPosition = new int[] {row, column};
-		
 	}
 
 	@Override
@@ -98,9 +96,12 @@ public class Knight extends Chess_Pieces {
 	}
 
 	@Override
-	boolean isChecking(boolean isPermanent) {
-		// TODO Auto-generated method stub
-		return false;
+	boolean isMoved() {
+		return isMoved;
 	}
 
+	@Override
+	void setMovedStatus(boolean isMoved) {
+		this.isMoved=isMoved;	
+	}
 }

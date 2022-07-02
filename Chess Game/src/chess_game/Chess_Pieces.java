@@ -13,8 +13,6 @@ public abstract class Chess_Pieces {
 	}
 	abstract boolean isLegalMoves(Board board, int row, int column);
 	abstract boolean isPermanent();
-	abstract boolean isChecking(Board board, int row, int column);
-	abstract void CaptureMovement();
 	abstract Image getSprite(PlayerColor color);
 	abstract void setInitialPosition(int row, int column);
 	abstract int[] getInitialPosition();
@@ -24,4 +22,6 @@ public abstract class Chess_Pieces {
 	abstract void setPosition(int row, int column);
 	abstract Type_of_Piece getType();
 	abstract void setType(Type_of_Piece type);
+	abstract boolean isMoved();
+	abstract void setMovedStatus(boolean isMoved);
 }

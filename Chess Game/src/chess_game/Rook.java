@@ -10,6 +10,7 @@ public class Rook extends Chess_Pieces{
 	private PlayerColor color;
 	private int[] CurrentPosition;
 	private Type_of_Piece type;
+	private boolean isMoved;
 	
 	public Rook(PlayerColor color, Board board, int row, int column) {
 		super(color, board, row, column);
@@ -18,17 +19,12 @@ public class Rook extends Chess_Pieces{
 		board.getBoard()[getInitialPosition()[1]][getInitialPosition()[0]]=this;
 		setColor(color);
 		setType(Type_of_Piece.ROOK);
+		isMoved=false;
 	}
 	@Override
 	boolean isPermanent() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	void CaptureMovement() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -64,9 +60,25 @@ public class Rook extends Chess_Pieces{
 
 	@Override
 	boolean isLegalMoves(Board board, int row, int column) {
-		return false;
-		// TODO Auto-generated method stub
-		
+		if(board.getBoard()[row][column]!=null && board.getBoard()[row][column].getColor()==color) {
+			return false;
+		} else if(getPosition()[1]==row) {
+			for(int i=(int) Math.signum(column-getPosition()[0]); Math.abs(i)<Math.abs(column-getPosition()[0]); i+=Math.signum(column-getPosition()[0])) {
+				if(board.getBoard()[row][getPosition()[0]+i]!=null) {
+					return false;
+				}
+			}
+			return true;
+		} else if(getPosition()[0]==column) {
+			for(int i=(int) Math.signum(row-getPosition()[1]); Math.abs(i)<Math.abs(row-getPosition()[1]); i+=Math.signum(row-getPosition()[1])) {
+				if(board.getBoard()[getPosition()[1]+i][column]!=null) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -90,9 +102,13 @@ public class Rook extends Chess_Pieces{
 		this.type= type;
 		
 	}
+	
 	@Override
-	boolean isChecking(Board board, int row, int column) {
-		// TODO Auto-generated method stub
-		return false;
+	boolean isMoved() {
+		return isMoved;
+	}
+	@Override
+	void setMovedStatus(boolean isMoved) {
+		this.isMoved=isMoved;
 	}
 }
